@@ -1,0 +1,162 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Orgao {
+  id: ID!
+  nome: String!
+}
+
+type Situacao {
+  id: ID!
+  descricao: String!
+}
+
+type Edital {
+  id: ID!
+  nome: String!
+  codigo: String!
+  situacao: Situacao!
+  permitePessoaFisica: Boolean!
+  orgao: Orgao!
+  dataInicioPropostas: DateTime!
+  dataTerminoPropostas: DateTime!
+  dataClassificacao: DateTime!
+  contato: String!
+  lotes: [Lote!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type UnidadeArmazenadora {
+  id: ID!
+  nome: String!
+}
+
+type ItemLote {
+  unidadeArmazenadora: UnidadeArmazenadora!
+  quantidade: Float!
+  unidadeMedida: String!
+  descricao: String!
+}
+
+type TipoLote {
+  id: ID!
+  descricao: String!
+}
+
+type Lote {
+  id: ID!
+  editalId: ID!
+  numero: Float!
+  orgao: Orgao!
+  tipo: TipoLote!
+  situacao: Situacao!
+  valorMinimo: Float!
+  permitePessoaFisica: Boolean!
+  itens: [ItemLote!]!
+  edital: Edital!
+}
+
+type PagingResponseModel {
+  page: Float!
+  limit: Float!
+  total: Float!
+}
+
+type LotesResponse {
+  paging: PagingResponseModel!
+  data: [Lote!]!
+}
+
+type EditaisResponse {
+  paging: PagingResponseModel!
+  data: [Edital!]!
+}
+
+type Query {
+  """Obtêm os lotes do edital."""
+  lotes(filter: LoteFilter): LotesResponse!
+
+  """Obtêm o lote por seu identificador."""
+  lote(id: String!): Lote!
+
+  """Obtêm a lista de editais da receita"""
+  editais(filter: EditaisFilter): EditaisResponse!
+
+  """Obtêm o edital por seu indentificador"""
+  edital(id: String!): Edital!
+
+  """Obtêm a lista de todos os orgãos."""
+  orgaos: [Orgao!]!
+
+  """Obtêm a lista de todos as situações da receita."""
+  situacoes: [Situacao!]!
+
+  """Obtêm todos o tipos de lotes (tipos dos produtos)."""
+  tiposLotes: [TipoLote!]!
+
+  """Obtêm todos as unidades armazenadoras."""
+  unidadesArmazenadoras: [UnidadeArmazenadora!]!
+}
+
+input LoteFilter {
+  page: Int = 1
+  limit: Int = 10
+  numero: [Int!]
+  edital: [String!]
+  orgao: [String!]
+  tipo: [String!]
+  situacao: [String!]
+  valorMinimo: NumberRangeFilter
+  permitePessoaFisica: Boolean
+  unidadeArmazenadora: [String!]
+}
+
+input NumberRangeFilter {
+  start: Float
+  end: Float
+}
+
+input EditaisFilter {
+  page: Int = 1
+  limit: Int = 10
+  permitePessoaFisica: Boolean
+  codigo: [String!]
+  orgao: [String!]
+  situacao: [String!]
+  dataInicioPropostas: DateRangeFilter
+  dataTerminoPropostas: DateRangeFilter
+  dataClassificacao: DateRangeFilter
+}
+
+input DateRangeFilter {
+  start: DateTime
+  end: DateTime
+}
+
+type Mutation {
+  """Solicita o cadastro na newsletter para o e-mail informado."""
+  subscribe(input: SubscribeInput!): Boolean!
+
+  """Confirma o cadastro na newsletter a partir do token de confirmação."""
+  confirm(input: ConfirmInput!): Boolean!
+
+  """Cancela o cadastro na newsletter a partir do token."""
+  unsubscribe(input: UnsubscribeInput!): Boolean!
+}
+
+input SubscribeInput {
+  email: String!
+}
+
+input ConfirmInput {
+  token: String!
+}
+
+input UnsubscribeInput {
+  token: String!
+}
