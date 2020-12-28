@@ -4,17 +4,19 @@
 <p align="center">Laion API</p>
 <p align="center">Não perca mais os leilões da Receita Federal.</p>
 
-# # Descrição
+[![Build Status](https://dev.azure.com/hnreche/Laion/_apis/build/status/Laion%20API?branchName=main)](https://dev.azure.com/hnreche/Laion/_build/latest?definitionId=5&branchName=main)
+
+# Descrição
 
 Projeto construido em cima do framework [NestJS](https://github.com/nestjs/nest) para coleta e disponibilização de editais e lotes públicos da Receita Federal.
 
-# # Instalação
+# Instalação
 
 ```bash
 $ npm install
 ```
 
-# # Uso
+# Uso
 
 ```bash
 # development
@@ -27,7 +29,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-# # Configuração
+# Configuração
 
 ```
 PORT=3000                                   # Porta da aplicação.

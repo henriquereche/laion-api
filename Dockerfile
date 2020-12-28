@@ -19,7 +19,10 @@ RUN npm install --silent
 FROM server AS start
 
 WORKDIR /app
+
 COPY --from=build ["/app", "/app"]
 COPY . /app
+
+RUN npm run build
 
 CMD [ "nest", "start" ]
