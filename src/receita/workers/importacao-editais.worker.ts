@@ -21,7 +21,7 @@ export class ImportacaoEditaisWorker {
     }
 
     /** Cron job que realiza a importação de todos os editais e lotes da receita federal. */
-    @Cron("0 0 0/6 * * *")
+    @Cron("0 */6 * * *")
     public async start(): Promise<void> {
 
         this.logger.log(`Iniciando coleta editais.`);
