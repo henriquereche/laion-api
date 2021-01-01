@@ -20,4 +20,7 @@ export class ItemLote {
     @Prop({ required: true })
     @Field()
     descricao: string;
+
+    @Prop({ required: true })
+    md5: string;
 }

@@ -6,7 +6,6 @@ import { Situacao } from "./situacao.model";
 import { TipoLote } from "./tipo-lote.model";
 import { Types } from 'mongoose';
 
-
 @Schema({ collection: "Lote" })
 @ObjectType()
 export class Lote {
@@ -14,9 +13,9 @@ export class Lote {
     @Field(type => ID, { name: "id" })
     _id: Types.ObjectId;
 
-    @Prop({ 
-        type: Types.ObjectId, 
-        required: true 
+    @Prop({
+        type: Types.ObjectId,
+        required: true
     })
     @Field(type => ID)
     editalId: Types.ObjectId;
@@ -48,4 +47,7 @@ export class Lote {
     @Prop()
     @Field(type => [ItemLote])
     itens: ItemLote[];
+
+    @Prop({ required: true })
+    md5: string;
 }

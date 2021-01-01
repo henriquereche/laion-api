@@ -7,7 +7,7 @@ import { Situacao } from "./situacao.model";
 @Schema({ collection: "Edital" })
 @ObjectType()
 export class Edital {
-
+    
     @Field(type => ID, { name: "id" })
     _id: Types.ObjectId;
 
@@ -46,4 +46,7 @@ export class Edital {
     @Prop({ required: true })
     @Field()
     contato: string;
+    
+    @Prop({ required: true })
+    md5: string;
 }

@@ -9,6 +9,7 @@ import { ReceitaFederalProvider } from "./receita-federal.provider";
 import { LoteReceitaResponse } from "../interfaces/lote-receita-response.interface";
 import { EditalReceitaResponse } from "../interfaces/edital-receita-response.interface";
 import { EditalSituacaoEditaisDisponiveisReceitaResponse } from "../interfaces/edital-situacao-editais-disponiveis-receita-response.interface";
+import { ReceitaHashProvider } from "./receita-hash.provider";
 
 export type EditalLotesReceita = {
     edital: EditalReceitaResponse,
@@ -24,16 +25,19 @@ export type EditalLotes = {
 export class ImportacaoEditaisProvider {
 
     private readonly receitaFederalProvider: ReceitaFederalProvider;
+    private readonly receitaHashProvider: ReceitaHashProvider;
     private readonly editalModel: Model<EditalSchema>;
     private readonly loteModel: Model<LoteSchema>;
     private readonly logger: Logger;
 
     constructor(
         receitaFederalProvider: ReceitaFederalProvider,
+        receitaHashProvider: ReceitaHashProvider,
         @InjectModel(EditalSchema.name) editalModel: Model<EditalSchema>,
         @InjectModel(LoteSchema.name) loteModel: Model<LoteSchema>
     ) {
         this.receitaFederalProvider = receitaFederalProvider;
+        this.receitaHashProvider = receitaHashProvider;
         this.editalModel = editalModel;
         this.loteModel = loteModel;
         this.logger = new Logger(ImportacaoEditaisProvider.name);
@@ -58,6 +62,7 @@ export class ImportacaoEditaisProvider {
             edital.dataTerminoPropostas = editalLotes.edital.dataTerminoPropostas;
             edital.dataClassificacao = editalLotes.edital.dataClassificacao;
             edital.contato = editalLotes.edital.contato;
+            edital.md5 = this.receitaHashProvider.computeMD5Edital(edital);
 
             await this.editalModel.updateOne(
                 { codigo: edital.codigo },
@@ -69,6 +74,8 @@ export class ImportacaoEditaisProvider {
         else {
 
             edital = new this.editalModel(editalLotes.edital);
+            edital.md5 = this.receitaHashProvider.computeMD5Edital(edital);
+
             await edital.save();
         }
 
@@ -157,6 +164,13 @@ export class ImportacaoEditaisProvider {
             updateLote.valorMinimo = lote.valorMinimo;
             updateLote.itens = lote.itens;
 
+            // Computa o hash dos objetos.
+            updateLote.md5 = this.receitaHashProvider.computeMD5Lote(updateLote);
+            updateLote.itens.forEach(
+                item => item.md5 = this.receitaHashProvider
+                    .computeMD5ItemLote(item)
+            );
+
             await this.loteModel.updateOne(
                 { editalId: edital._id, numero: lote.numero },
                 updateLote
@@ -167,6 +181,13 @@ export class ImportacaoEditaisProvider {
         else {
 
             lote.editalId = edital._id;
+
+            // Computa o hash dos objetos.
+            lote.md5 = this.receitaHashProvider.computeMD5Lote(lote);
+            lote.itens.forEach(
+                item => item.md5 = this.receitaHashProvider
+                    .computeMD5ItemLote(item)
+            );
 
             const createdLote = new this.loteModel(lote);
             await createdLote.save();

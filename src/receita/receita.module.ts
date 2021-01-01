@@ -12,6 +12,7 @@ import { ReceitaFederalProvider } from './providers/receita-federal.provider';
 import { ImportacaoEditaisWorker } from './workers/importacao-editais.worker';
 import { ReceitaModelsFactoryProvider } from './providers/receita-models-factory.provider';
 import { ReceitaResolver } from './receita.resolver';
+import { ReceitaHashProvider } from './providers/receita-hash.provider';
 
 @Module({
     imports: [
@@ -32,7 +33,8 @@ import { ReceitaResolver } from './receita.resolver';
         DescricoesReceitaProvider,
         ReceitaModelsFactoryProvider,
         ImportacaoEditaisWorker,
-        ReceitaResolver
+        ReceitaResolver,
+        ReceitaHashProvider
     ]
 })
 export class ReceitaModule { }
