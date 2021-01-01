@@ -1,39 +1,43 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
 
+export interface PagingArgs {
+    page: number;
+    limit: number;
+}
+
 @InputType()
 export class BaseFilter {
 
     public static DEFAULT_PAGE = 1;
     public static DEFAULT_LIMIT = 10;
-    public static MAXIMUM_LIMIT = 100;
-
-    private _page?: number;
-
-    public get page(): number {
-        return this._page ?? BaseFilter.DEFAULT_PAGE;
-    } 
+    public static MAXIMUM_LIMIT = 50;
 
     @Field(type => Int, { nullable: true })
-    public set page(value: number | null) {
-        this._page = value != null
-            ? value < 0
-                ? 0
-                : value
-            : BaseFilter.DEFAULT_PAGE;
-    }
-
-    private _limit?: number;
-
-    public get limit(): number {
-        return this._limit ?? BaseFilter.DEFAULT_LIMIT;
-    }
+    private page?: number;
 
     @Field(type => Int, { nullable: true })
-    public set limit(value: number | null) {
-        this._limit = value != null
-            ? value > BaseFilter.MAXIMUM_LIMIT
-                ? BaseFilter.MAXIMUM_LIMIT
-                : value <= 0 ? 1 : value
-            : BaseFilter.DEFAULT_LIMIT;
+    private limit?: number;
+
+    /**
+     * Obtêm os valores de paginação.
+     * @param filter filtro base de paginação.
+     */
+    public static getPagingArgs(filter: BaseFilter) : PagingArgs {
+
+        const pageValue = filter.page ?? BaseFilter.DEFAULT_PAGE;
+        const page = pageValue < 1 
+            ? BaseFilter.DEFAULT_PAGE 
+            : pageValue;
+
+        const limitValue = filter.limit ?? BaseFilter.DEFAULT_LIMIT;
+        const limit = limitValue < 1 ? 1 
+            : limitValue > BaseFilter.MAXIMUM_LIMIT 
+                ? BaseFilter.MAXIMUM_LIMIT 
+                : limitValue;
+
+        return {
+            limit: limit,
+            page: page
+        };
     }
 }

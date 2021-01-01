@@ -100,15 +100,17 @@ export class LotesProvider {
             .find(findObject)
             .countDocuments();
 
+        const pagingArgs = BaseFilter.getPagingArgs(filter);
+        
         const data = await this.loteModel
             .find(findObject)
-            .skip((filter.page - 1) * filter.limit)
-            .limit(filter.limit);
+            .skip((pagingArgs.page - 1) * pagingArgs.limit)
+            .limit(pagingArgs.limit);
 
         return new LotesResponse(
             new PagingResponseModel(
-                filter.page, 
-                filter.limit, 
+                pagingArgs.page, 
+                pagingArgs.limit, 
                 count
             ),
             data

@@ -104,8 +104,8 @@ type Query {
 }
 
 input LoteFilter {
-  page: Int = 1
-  limit: Int = 10
+  page: Int
+  limit: Int
   numero: [Int!]
   edital: [String!]
   orgao: [String!]
@@ -122,8 +122,8 @@ input NumberRangeFilter {
 }
 
 input EditaisFilter {
-  page: Int = 1
-  limit: Int = 10
+  page: Int
+  limit: Int
   permitePessoaFisica: Boolean
   codigo: [String!]
   orgao: [String!]
