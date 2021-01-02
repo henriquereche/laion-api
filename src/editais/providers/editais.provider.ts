@@ -30,12 +30,19 @@ export class EditaisProvider {
     /**
      * Obtêm a listagem de editais pelo filtro.
      * @param filter filtro de editais.
+     * @param countDocuments obtêm a contagem total de documentos.
      */
-    public async find(filter: EditaisFilter): Promise<EditaisResponse> {
+    public async find(
+        filter: EditaisFilter,
+        countDocuments: boolean = false
+    ): Promise<EditaisResponse> {
 
         if (filter == null) {
 
-            const count = await this.editalModel.countDocuments();
+            const count = countDocuments
+                ? await this.editalModel.countDocuments()
+                : 0;
+
             const data = await this.editalModel
                 .find()
                 .limit(BaseFilter.DEFAULT_LIMIT);
@@ -107,9 +114,11 @@ export class EditaisProvider {
             findObject['dataClassificacao'] = nestedDateFilter;
         }
 
-        const count = await this.editalModel
-            .find(findObject)
-            .countDocuments();
+        const count = countDocuments 
+            ? await this.editalModel
+                .find(findObject)
+                .countDocuments()
+            : 0;
 
         const pagingArgs = BaseFilter.getPagingArgs(filter);
 

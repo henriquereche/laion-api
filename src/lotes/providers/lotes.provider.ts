@@ -30,12 +30,19 @@ export class LotesProvider {
     /**
      * Obtêm a lista de Lotes da receita a partir do filtro.
      * @param filter filtro dos lotes.
+     * @param countDocuments obtêm a contagem total de documentos.
      */
-    public async find(filter: LoteFilter): Promise<LotesResponse> {
+    public async find(
+        filter: LoteFilter, 
+        countDocuments: boolean = false
+    ): Promise<LotesResponse> {
 
         if (filter == null) {
 
-            const count = await this.loteModel.countDocuments();
+            const count = countDocuments 
+                ? await this.loteModel.countDocuments() 
+                : 0;
+
             const data = await this.loteModel
                 .find()
                 .limit(BaseFilter.DEFAULT_LIMIT);
@@ -96,12 +103,14 @@ export class LotesProvider {
             findObject['valorMinimo'] = nestedNumberFilter;
         }
 
-        const count = await this.loteModel
-            .find(findObject)
-            .countDocuments();
+        const count = countDocuments 
+            ? await this.loteModel
+                .find(findObject)
+                .countDocuments() 
+            : 0;
 
         const pagingArgs = BaseFilter.getPagingArgs(filter);
-        
+
         const data = await this.loteModel
             .find(findObject)
             .skip((pagingArgs.page - 1) * pagingArgs.limit)

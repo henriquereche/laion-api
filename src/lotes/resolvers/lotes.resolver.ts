@@ -1,4 +1,6 @@
-import { Args, Query, Resolver } from "@nestjs/graphql";
+import { Args, Info, Query, Resolver } from "@nestjs/graphql";
+import { GraphQLResolveInfo } from "graphql";
+import { ResolveFieldProvider } from "src/shared/graphql/resolve-field.provider";
 import { Lote } from "src/shared/models/lote.model";
 import { LoteFilter } from "../inputs/lote-filter.input";
 import { LotesResponse } from "../models/lotes-response.model";
@@ -19,10 +21,17 @@ export class LotesResolver {
         { description: "Obtêm os lotes do edital.", complexity: 30 }
     )
     public async lotes(
-        @Args('filter', { nullable: true }) filter: LoteFilter
+        @Args('filter', { nullable: true }) filter: LoteFilter,
+        @Info() info: GraphQLResolveInfo
     ): Promise<LotesResponse> {
 
-        return await this.provider.find(filter);
+        return await this.provider.find(
+            filter,
+            ResolveFieldProvider.containsField(
+                info, 
+                'paging'
+            )
+        );
     }
 
     @Query(

@@ -1,4 +1,6 @@
-import { Args, Query, Resolver } from "@nestjs/graphql";
+import { Args, Info, Query, Resolver } from "@nestjs/graphql";
+import { GraphQLResolveInfo } from "graphql";
+import { ResolveFieldProvider } from "src/shared/graphql/resolve-field.provider";
 import { Edital } from "src/shared/models/edital.model";
 import { EditaisFilter } from "../inputs/editais-filter.input";
 import { EditaisResponse } from "../models/editais-response.model";
@@ -18,10 +20,17 @@ export class EditaisResolver {
         { description: "Obtêm a lista de editais da receita", complexity: 30 }
     )
     public async editais(
-        @Args('filter', { nullable: true }) filter: EditaisFilter
+        @Args('filter', { nullable: true }) filter: EditaisFilter,
+        @Info() info: GraphQLResolveInfo
     ): Promise<EditaisResponse> {
 
-        return await this.provider.find(filter);        
+        return await this.provider.find(
+            filter,
+            ResolveFieldProvider.containsField(
+                info, 
+                'paging'
+            )
+        );
     }
 
     @Query(
