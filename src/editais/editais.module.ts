@@ -5,6 +5,9 @@ import { LoteSchema } from 'src/shared/schemas/lote.schema';
 import { EditaisResolver } from './resolvers/editais.resolver';
 import { EditalResolver } from './resolvers/edital.resolver';
 import { EditaisProvider } from './providers/editais.provider';
+import { LotesLoader } from './providers/lotes.loader';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { DataLoaderInterceptor } from 'nestjs-dataloader';
 
 @Module({
     imports: [
@@ -16,7 +19,12 @@ import { EditaisProvider } from './providers/editais.provider';
     providers: [
         EditalResolver,
         EditaisResolver, 
-        EditaisProvider
+        EditaisProvider,
+        LotesLoader,
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: DataLoaderInterceptor,
+        },
     ]
 })
 export class EditaisModule {}
