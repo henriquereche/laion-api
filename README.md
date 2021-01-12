@@ -2,7 +2,6 @@
   <img src="https://i.ibb.co/nPMVxW6/logo.png" height=150 />
 </p>
 <p align="center">Laion API</p>
-<p align="center">Não perca mais os leilões da Receita Federal.</p>
 
 [![Build Status](https://dev.azure.com/hnreche/Laion/_apis/build/status/Laion%20API?branchName=main)](https://dev.azure.com/hnreche/Laion/_build/latest?definitionId=5&branchName=main)
 
